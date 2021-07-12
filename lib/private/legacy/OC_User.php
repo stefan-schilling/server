@@ -172,7 +172,11 @@ class OC_User {
 				$userSession = \OC::$server->getUserSession();
 				$userSession->setLoginName($uid);
 				$request = OC::$server->getRequest();
-				$userSession->createSessionToken($request, $uid, $uid);
+				$password = null;
+				if ($backend instanceof \OCP\Authentication\IProvideUserSecretBackend) {
+					$password = $backend->getCurrentUserSecret();
+				}
+				$userSession->createSessionToken($request, $uid, $uid, $password);
 				// setup the filesystem
 				OC_Util::setupFS($uid);
 				// first call the post_login hooks, the login-process needs to be
@@ -184,7 +188,7 @@ class OC_User {
 					'post_login',
 					[
 						'uid' => $uid,
-						'password' => '',
+						'password' => $password ?? '',
 						'isTokenLogin' => false,
 					]
 				);
