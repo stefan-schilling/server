@@ -24,7 +24,6 @@
 		<HeaderBar
 			:account-property="accountProperty"
 			label-for="email"
-			:handle-scope-change="savePrimaryEmailScope"
 			:is-editable="displayNameChangeSupported"
 			:is-multi-value-supported="true"
 			:is-valid-section="isValidSection"
@@ -60,10 +59,10 @@ import Email from './Email'
 import HeaderBar from '../shared/HeaderBar'
 
 import { ACCOUNT_PROPERTY_READABLE_ENUM, DEFAULT_ADDITIONAL_EMAIL_SCOPE } from '../../../constants/AccountPropertyConstants'
-import { savePrimaryEmail, savePrimaryEmailScope, removeAdditionalEmail } from '../../../service/PersonalInfo/EmailService'
+import { savePrimaryEmail, removeAdditionalEmail } from '../../../service/PersonalInfo/EmailService'
 import { validateEmail } from '../../../utils/validate'
 
-const { emails: { additionalEmails, primaryEmail } } = loadState('settings', 'personalInfoParameters', {})
+const { emailMap: { additionalEmails, primaryEmail } } = loadState('settings', 'personalInfoParameters', {})
 const { displayNameChangeSupported } = loadState('settings', 'accountParameters', {})
 
 export default {
@@ -80,7 +79,6 @@ export default {
 			additionalEmails,
 			displayNameChangeSupported,
 			primaryEmail,
-			savePrimaryEmailScope,
 		}
 	},
 
