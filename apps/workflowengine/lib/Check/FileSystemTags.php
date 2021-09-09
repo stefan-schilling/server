@@ -6,6 +6,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -38,9 +39,6 @@ use OCP\WorkflowEngine\IFileCheck;
 
 class FileSystemTags implements ICheck, IFileCheck {
 	use TFileCheck;
-
-	/** @var array */
-	protected $fileIds;
 
 	/** @var array */
 	protected $fileSystemTags;
@@ -131,11 +129,6 @@ class FileSystemTags implements ICheck, IFileCheck {
 	 * @return int[]
 	 */
 	protected function getFileIds(ICache $cache, $path, $isExternalStorage) {
-		$cacheId = $cache->getNumericStorageId();
-		if (isset($this->fileIds[$cacheId][$path])) {
-			return $this->fileIds[$cacheId][$path];
-		}
-
 		$parentIds = [];
 		if ($path !== $this->dirname($path)) {
 			$parentIds = $this->getFileIds($cache, $this->dirname($path), $isExternalStorage);
@@ -147,8 +140,6 @@ class FileSystemTags implements ICheck, IFileCheck {
 		if ($fileId !== -1) {
 			$parentIds[] = $cache->getId($path);
 		}
-
-		$this->fileIds[$cacheId][$path] = $parentIds;
 
 		return $parentIds;
 	}
